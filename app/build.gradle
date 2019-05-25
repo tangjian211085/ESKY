@@ -1,0 +1,59 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    defaultConfig {
+        applicationId "com.bhesky.app"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+
+        externalNativeBuild {
+            cmake {
+                cppFlags ""
+                //指定Android编译器
+                arguments "-DANDROID_TOOLCHAIN=gcc"
+            }
+        }
+
+//        ndk {
+//            abiFilters 'armeabi-v7a', 'arm64-v8a'
+//        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        main {
+            //注意下面两行命令顺序不可以颠倒，不然会先加载so库然后又自动编译。
+            //禁止自动编译
+            jni.srcDirs = [] //disable automatic ndk-build
+            //指定jniLibs的位置
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            // 指定CMakeLists.txt文件路径  app/build/intermadiates/cmake/debug/obj 用于存放cmake编译好的so文件
+            // .externalNativeBuild文件夹: 用于存放cmake编译好的文件, 包括支持的各种硬件等信息.
+            path "CMakeLists.txt"
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    def androidDependencies = rootProject.ext.androidDependencies
+//    def dataDependencies = rootProject.ext.dataDependencies
+
+    implementation androidDependencies.appcompat_v7
+    implementation androidDependencies.constraint
+    implementation project(':CommonLib')
+}

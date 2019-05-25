@@ -1,0 +1,103 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <!--<dimen name="activity_horizontal_margin">20dp</dimen>-->
+    <!--<dimen name="activity_vertical_margin">20dp</dimen>-->
+
+    <!--<dimen name="space_05">0.67dp</dimen>-->
+    <!--<dimen name="space_1">1.33dp</dimen>-->
+    <!--<dimen name="space_2">1.5dp</dimen>-->
+    <!--<dimen name="space_3">4dp</dimen>-->
+    <!--<dimen name="space_4">3dp</dimen>-->
+    <!--<dimen name="space_5">5.33dp</dimen>-->
+    <!--<dimen name="space_6">8dp</dimen>-->
+    <!--<dimen name="space_7">9.33dp</dimen>-->
+    <!--<dimen name="space_8">10.67dp</dimen>-->
+    <!--<dimen name="space_9">12dp</dimen>-->
+    <!--<dimen name="space_10">13.33dp</dimen>-->
+    <!--<dimen name="space_11">14.67dp</dimen>-->
+    <!--<dimen name="space_12">16dp</dimen>-->
+    <!--<dimen name="space_13">17.33dp</dimen>-->
+    <!--<dimen name="space_14">18.67dp</dimen>-->
+    <!--<dimen name="space_15">20dp</dimen>-->
+    <!--<dimen name="space_16">21.33dp</dimen>-->
+    <!--<dimen name="space_17">22.67dp</dimen>-->
+    <!--<dimen name="space_18">24dp</dimen>-->
+    <!--<dimen name="space_19">25.33dp</dimen>-->
+    <!--<dimen name="space_20">26.67dp</dimen>-->
+    <!--<dimen name="space_21">28dp</dimen>-->
+    <!--<dimen name="space_22">29.33dp</dimen>-->
+    <!--<dimen name="space_23">30.67dp</dimen>-->
+    <!--<dimen name="space_24">32dp</dimen>-->
+    <!--<dimen name="space_25">33.33dp</dimen>-->
+    <!--<dimen name="space_26">34.67dp</dimen>-->
+    <!--<dimen name="space_27">36dp</dimen>-->
+    <!--<dimen name="space_28">37.33dp</dimen>-->
+    <!--<dimen name="space_29">38.67dp</dimen>-->
+    <!--<dimen name="space_30">40dp</dimen>-->
+    <!--<dimen name="space_32">42.67dp</dimen>-->
+    <!--<dimen name="space_34">45.33dp</dimen>-->
+    <!--<dimen name="space_35">46.67dp</dimen>-->
+    <!--<dimen name="space_36">48dp</dimen>-->
+    <!--<dimen name="space_38">50.67dp</dimen>-->
+    <!--<dimen name="space_40">53.33dp</dimen>-->
+    <!--<dimen name="space_41">54.67dp</dimen>-->
+    <!--<dimen name="space_44">58.67dp</dimen>-->
+    <!--<dimen name="space_45">60dp</dimen>-->
+    <!--<dimen name="space_46">61.33dp</dimen>-->
+    <!--<dimen name="space_47">62.67dp</dimen>-->
+    <!--<dimen name="space_48">64dp</dimen>-->
+    <!--<dimen name="space_49">65.33dp</dimen>-->
+    <!--<dimen name="space_50">66.67dp</dimen>-->
+    <!--<dimen name="space_51">68dp</dimen>-->
+    <!--<dimen name="space_54">72dp</dimen>-->
+    <!--<dimen name="space_56">74.67dp</dimen>-->
+    <!--<dimen name="space_59">78.67dp</dimen>-->
+    <!--<dimen name="space_60">80dp</dimen>-->
+    <!--<dimen name="space_61">81.67dp</dimen>-->
+    <!--<dimen name="space_65">86.67dp</dimen>-->
+    <!--<dimen name="space_68">90.67dp</dimen>-->
+    <!--<dimen name="space_70">93.33dp</dimen>-->
+    <!--<dimen name="space_75">100dp</dimen>-->
+    <!--<dimen name="space_80">106.67dp</dimen>-->
+    <!--<dimen name="space_82">109.33dp</dimen>-->
+    <!--<dimen name="space_84">112dp</dimen>-->
+    <!--<dimen name="space_88">117.33dp</dimen>-->
+    <!--<dimen name="space_90">120dp</dimen>-->
+    <!--<dimen name="space_100">133.33dp</dimen>-->
+    <!--<dimen name="space_112">149.33dp</dimen>-->
+    <!--<dimen name="space_116">154.67dp</dimen>-->
+    <!--<dimen name="space_120">160dp</dimen>-->
+    <!--<dimen name="space_140">186.67dp</dimen>-->
+    <!--<dimen name="space_150">200dp</dimen>-->
+    <!--<dimen name="space_168">224dp</dimen>-->
+    <!--<dimen name="space_180">240dp</dimen>-->
+    <!--<dimen name="space_200">267dp</dimen>-->
+    <!--<dimen name="space_224">298.67dp</dimen>-->
+    <!--<dimen name="space_240">320dp</dimen>-->
+    <!--<dimen name="space_250">333dp</dimen>-->
+    <!--<dimen name="space_300">400dp</dimen>-->
+
+    <!--&lt;!&ndash;弹出框宽度&ndash;&gt;-->
+    <!--<dimen name="dialog_width">400dp</dimen>-->
+    <!--<dimen name="dialog_left_or_right_padding">48dp</dimen>-->
+    <!--<dimen name="dialog_bottom_btn_height">66.67dp</dimen>-->
+    <!--<dimen name="dialog_edittext_height">40dp</dimen>-->
+    <!--<dimen name="dialog_min_height">260dp</dimen>-->
+    <!--<dimen name="dialog_download_top">64dp</dimen>-->
+    <!--<dimen name="dialog_download_progress_margin_left_right">44dp</dimen>-->
+    <!--<dimen name="dialog_download_progress_margin_top">20dp</dimen>-->
+    <!--<dimen name="dialog_download_progress_height">12dp</dimen>-->
+    <!--<dimen name="dialog_download_progress_text_size">14sp</dimen>-->
+    <!--<dimen name="dialog_icon_width_height">66.67dp</dimen>-->
+
+    <!--&lt;!&ndash;title height&ndash;&gt;-->
+    <!--<dimen name="top_title_height">@dimen/space_48</dimen>-->
+    <!--<dimen name="tab_bottom_line_height">@dimen/space_2</dimen>-->
+
+    <!--&lt;!&ndash;common TextView height&ndash;&gt;-->
+    <!--<dimen name="common_textView_height">@dimen/space_48</dimen>-->
+    <!--&lt;!&ndash;common EditText height&ndash;&gt;-->
+    <!--<dimen name="common_editText_height">@dimen/space_48</dimen>-->
+    <!--&lt;!&ndash;common button height&ndash;&gt;-->
+    <!--<dimen name="common_button_height">@dimen/space_48</dimen>-->
+</resources>

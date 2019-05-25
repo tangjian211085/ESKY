@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/rl_footer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                tools:ignore="UnusedResources">
+
+    <TextView
+        android:id="@+id/pulldown_footer_text"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:text="@string/more_data"
+        android:textColor="@color/text_black_9"
+        android:textSize="14sp"
+        android:visibility="invisible"/>
+
+    <LinearLayout
+        android:id="@+id/empty_ll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/empty_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/anonymous"/>
+
+        <TextView
+            android:id="@+id/empty_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_5"
+            android:text="暂无数据"
+            android:textColor="@color/text_black_9"
+            android:textSize="@dimen/text_size_13"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/footer_loading_progress_ll"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_30"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="@dimen/space_20"
+            android:layout_height="@dimen/space_20"
+            android:layout_gravity="center"
+            android:background="@drawable/loading_progress_round"
+            android:contentDescription="@null"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/space_10"
+            android:gravity="center"
+            android:text="@string/loading"
+            android:textColor="@color/text_black_9"
+            android:textSize="14sp"/>
+    </LinearLayout>
+</RelativeLayout>

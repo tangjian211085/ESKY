@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 加载对话框样式 -->
+    <style name="loading_dialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item> <!--边框-->
+        <item name="android:windowIsFloating">true</item> <!--是否浮现在activity之上-->
+        <item name="android:windowIsTranslucent">false</item>  <!--半透明-->
+        <item name="android:windowNoTitle">true</item> <!--无标题-->
+        <item name="android:windowBackground">@color/transparent</item> <!--背景透明-->
+        <item name="android:backgroundDimEnabled">false</item> <!--模糊-->
+    </style>
+
+    <style name="dialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item><!--边框-->
+        <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->
+        <item name="android:windowIsTranslucent">false</item><!--半透明-->
+        <item name="android:windowNoTitle">true</item><!--无标题-->
+        <item name="android:windowBackground">@color/transparent</item><!--背景透明-->
+        <item name="android:backgroundDimEnabled">false</item><!--模糊-->
+        <item name="android:windowAnimationStyle">@style/animationBottom</item>
+    </style>
+
+    <style name="dialogConfirmButtonTextStyle">
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:textColor">@color/dialog_btn_text_color</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/dialog_bottom_btn_height</item>
+    </style>
+
+    <style name="dialogCancelButtonTextStyle">
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:textColor">@color/dialog_btn_text_color</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/dialog_bottom_btn_height</item>
+    </style>
+
+    <style name="animationBottom" parent="@android:style/Theme.Dialog">
+        <item name="android:windowEnterAnimation">@anim/push_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/push_bottom_out</item>
+    </style>
+</resources>

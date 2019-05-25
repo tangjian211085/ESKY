@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_description">PHLib</string>
+    <string name="loading">加载中</string>
+    <string name="sure">确定</string>
+    <string name="cancel">取消</string>
+    <string name="more_data">加载更多</string>
+    <string name="no_data_to_load">暂无数据</string>
+    <string name="data_loading">加载中&#8230;</string>
+
+    <!-- WheelPicker start-->
+    <string name="Year">年</string>
+    <string name="Month">月</string>
+    <string name="Day">日</string>
+    <!-- WheelPicker end-->
+
+    <string name="login">登录</string>
+    <string name="register">注册</string>
+</resources>

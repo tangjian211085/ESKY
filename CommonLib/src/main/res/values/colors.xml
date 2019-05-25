@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#ffffff</color>
+    <color name="whitebb">#bbffffff</color>
+    <color name="transparent">#00ffffff</color>
+    <color name="background_bg">#fff5f0f0</color>
+    <!-- 主色调 -->
+    <color name="main_color">#ff65BBB1</color>
+    <color name="text_black_0">#ff000000</color>
+    <color name="text_black_3">#ff333333</color>
+    <color name="text_black_6">#ff666666</color>
+    <color name="text_black_8">#ff888888</color>
+    <color name="text_black_9">#ff999999</color>
+    <color name="filter_type_bg">#88838383</color>
+
+    <color name="swipe_color1">#ff4285f4</color>
+    <color name="swipe_color2">#fff4b400</color>
+    <color name="swipe_color3">#ffdb4437</color>
+    <color name="swipe_color4">#ff0f9d58</color>
+
+    <!-- Banner图用到 -->
+    <color name="point_color_off">#ffdee5ee</color>
+    <color name="point_color_on">#ffe3ac0a</color>
+
+    <!--dialog颜色-->
+    <color name="dialog_bg">#f8f8f8</color>
+    <color name="dialog_btn_text_color">#007aff</color>
+    <color name="dialog_line">#dedede</color>
+    <color name="dialog_edittext_line">#dedede</color>
+
+    <color name="dm_ripple_color">#22222222</color>
+    <color name="line_color">#ffe5e5e5</color>
+    <color name="deal_pwd_line_color">#ff007aff</color>
+    <color name="wheel_view_line_border">#C7C7C7</color>
+
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="letter_list_view_bg">#77a9a9a9</color>
+
+    <!-- ProgressViewNew Start -->
+    <color name="colordefault">#999999</color>
+    <color name="colorAccent1">#5bb5eb</color>
+    <color name="colorAccent2">#8bd07c</color>
+    <color name="colorAccent3">#e8dd5f</color>
+    <color name="colorAccent4">#e97e5a</color>
+    <color name="colorAccent5">#ea4646</color>
+    <!-- ProgressViewNew End -->
+</resources>

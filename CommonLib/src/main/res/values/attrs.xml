@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RoundCornerProgress">
+        <attr name="rcProgress" format="float" />
+        <attr name="rcBackgroundPadding" format="dimension" />
+        <attr name="rcBackgroundRadius" format="dimension" />
+        <attr name="rcMax" format="float" />
+        <attr name="rcIconSrc" format="integer" />
+        <attr name="rcIconSize" format="dimension" />
+        <attr name="rcIconPadding" format="dimension" />
+        <attr name="rcHeaderColor" format="color" />
+        <attr name="rcProgressColor" format="color" />
+        <attr name="rcBackgroundColor" format="color" />
+        <attr name="rcTextProgressColor" format="color" />
+        <attr name="rcTextProgress" format="string" />
+        <attr name="rcTextProgressUnit" format="string" />
+        <attr name="rcTextProgressSize" format="dimension" />
+        <attr name="rcTextProgressWidth" format="dimension" />
+        <attr name="rcTextProgressPadding" format="dimension" />
+        <attr name="rcAutoTextChange" format="boolean" />
+        <attr name="rcSecondaryProgress" format="float" />
+        <attr name="rcSecondaryProgressColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="RoundProgressBar">
+        <attr name="roundColor" format="color" />
+        <attr name="roundProgressColor" format="color" />
+        <attr name="roundWidth" format="dimension" />
+        <attr name="textColor" format="color" />
+        <attr name="textSize" format="dimension" />
+        <attr name="progressText" format="string" />
+        <attr name="max" format="integer" />
+        <attr name="textIsDisplayable" format="boolean" />
+        <attr name="style">
+            <enum name="STROKE" value="0" />
+            <enum name="FILL" value="1" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="DMListView">
+        <attr name="emptyText" format="string" />
+    </declare-styleable>
+
+    <!-- CircleImageView圆形图片 -->
+    <declare-styleable name="CircleImageView">
+        <attr name="civ_border_width" format="dimension" />
+        <attr name="civ_border_color" format="color" />
+        <attr name="civ_border_overlay" format="boolean" />
+        <attr name="civ_fill_color" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="ScrollViewContainer">
+        <attr name="space_height" format="dimension" />
+    </declare-styleable>
+
+    <!-- RoundImageView圆角图片 -->
+    <attr name="borderRadius" format="dimension" />
+    <attr name="type">
+        <enum name="circle" value="0" />
+        <enum name="round" value="1" />
+    </attr>
+    <declare-styleable name="RoundImageView">
+        <attr name="borderRadius" />
+        <attr name="type" />
+    </declare-styleable>
+
+    <declare-styleable name="WheelPicker">
+        <attr name="wheel_data" format="reference" />
+        <attr name="wheel_selected_item_position" format="integer" />
+        <attr name="wheel_item_text_size" format="dimension" />
+        <attr name="wheel_item_text_color" format="color" />
+        <attr name="wheel_selected_item_text_color" format="color" />
+        <attr name="wheel_same_width" format="boolean" />
+        <attr name="wheel_maximum_width_text" format="string" />
+        <attr name="wheel_maximum_width_text_position" format="integer" />
+        <attr name="wheel_visible_item_count" format="integer" />
+        <attr name="wheel_item_space" format="dimension" />
+        <attr name="wheel_cyclic" format="boolean" />
+        <attr name="wheel_indicator" format="boolean" />
+        <attr name="wheel_indicator_color" format="color" />
+        <attr name="wheel_indicator_size" format="dimension" />
+        <attr name="wheel_curtain" format="boolean" />
+        <attr name="wheel_curtain_color" format="color" />
+        <attr name="wheel_atmospheric" format="boolean" />
+        <attr name="wheel_curved" format="boolean" />
+        <attr name="wheel_item_align" format="enum">
+            <enum name="center" value="0" />
+            <enum name="left" value="1" />
+            <enum name="right" value="2" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="WheelAreaPicker">
+        <attr name="area_wheel_item_text_size" format="dimension" />
+        <attr name="area_wheel_item_text_color" format="color" />
+        <attr name="area_wheel_selected_item_text_color" format="color" />
+        <attr name="area_wheel_visible_item_count" format="integer" />
+        <attr name="area_wheel_item_space" format="dimension" />
+        <attr name="area_wheel_cyclic" format="boolean" />
+        <attr name="area_wheel_curtain" format="boolean" />
+        <attr name="area_wheel_curtain_color" format="color" />
+        <attr name="area_wheel_atmospheric" format="boolean" />
+        <attr name="area_wheel_curved" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="LetterListView">
+        <attr name="selectedTextColor" format="color" /><!--文字颜色-->
+        <attr name="commonTextSize" format="dimension" /><!--文字大小-->
+        <attr name="commonTextColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="CircleProgressBar">
+        <attr name="borderWidth" format="dimension" />
+        <attr name="unprogresColor" format="color" />
+        <attr name="progressColor" format="color" />
+        <attr name="tickWidth" format="dimension" />
+        <attr name="tickDensity" format="integer" />
+        <attr name="bgShow" format="boolean" />
+        <attr name="radius" format="dimension" />
+        <attr name="arcbgColor" format="color" />
+        <attr name="degree" format="integer" />
+        <attr name="arcCapRound" format="boolean" />
+        <attr name="progressStyle" format="enum">
+            <enum name="tick" value="1" />
+            <enum name="arc" value="0" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="FanProgressBar">
+        <attr name="bgColor" format="color" />
+        <attr name="fgColor" format="color" />
+        <attr name="fanRoundWidth" format="dimension" />
+        <attr name="fanProgress" format="integer" />
+        <attr name="capRound" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="PointViewStyle">
+        <attr name="paintColor" format="color" />
+        <attr name="pointRadius" format="dimension" />
+    </declare-styleable>
+</resources>

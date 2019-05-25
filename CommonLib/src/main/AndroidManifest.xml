@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest package="com.puhui.lib">
+
+    <!--<user-permission android:name="android.permission.ACCESS_WIFI_STATE"/>-->
+
+    <!--<application-->
+    <!--android:allowBackup="true"-->
+    <!--android:supportsRtl="true">-->
+    <!--</application>-->
+
+</manifest>

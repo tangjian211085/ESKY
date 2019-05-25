@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/dialog_width"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/alert_bg"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/prompt_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="@dimen/space_20"
+        android:paddingTop="@dimen/space_15"
+        android:text="温馨提示"
+        android:textColor="@color/text_black_0"
+        android:textSize="@dimen/text_size_18" />
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:paddingBottom="@dimen/space_22"
+        android:paddingLeft="@dimen/dialog_left_or_right_padding"
+        android:paddingRight="@dimen/dialog_left_or_right_padding"
+        android:lineSpacingExtra="@dimen/space_3"
+        android:text="确定退出？"
+        android:textColor="@color/text_black_3"
+        android:textSize="@dimen/text_size_16" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_05"
+        android:background="@color/dialog_line" />
+
+    <TextView
+        android:id="@+id/btn_ok"
+        style="@style/dialogConfirmButtonTextStyle"
+        android:gravity="center"
+        android:text="@string/sure" />
+</LinearLayout>
