@@ -1,10 +1,14 @@
 package com.bhesky.app;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
+import com.bhesky.app.bean.User;
+import com.bhesky.app.utils.sqlite.BaseDaoFactory;
 import com.puhui.lib.utils.DMLog;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,10 +22,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        startService(new Intent(this, ProcessService.class));
-
-        DMLog.e(this.getClass().getSimpleName(), "" + stringFromJNI());
+//        startService(new Intent(this, ProcessService.class));
     }
 
     public native String stringFromJNI();
+
+    public void insert(View view) {
+        BaseDaoFactory.getInstance().getBaseDao(User.class).insert(
+                new User("tangjian", 29, "421583199202116632", "123456"));
+    }
+
+    public void query(View view) {
+//        User user = BaseDaoFactory.getInstance().getBaseDao(User.class).findFirst();
+//        if (null != user) {
+//            DMLog.e(this.getClass().getCanonicalName(), user.getIdCardNum());
+//        }
+
+        List<User> all = BaseDaoFactory.getInstance().getBaseDao(User.class).findAll();
+        DMLog.e(this.getClass().getCanonicalName(), "all.size() = " + all.size());
+    }
 }
