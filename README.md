@@ -19,4 +19,4 @@
 
 #### dex打包加密
     参看proxy_tool中Main.java以及proxy_core中ProxyApplication类
-    ![Image text](https://github.com/tangjian211085/ESKY/blob/master/dex_encrypt.png?raw=true)
+    ![logo](/images/dex_encrypt.png)
