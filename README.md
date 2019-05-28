@@ -19,5 +19,4 @@
 
 #### dex打包加密
     参看proxy_tool中Main.java以及proxy_core中ProxyApplication类
-    ![cmd-markdown-logo](D:\Develop\Android\Code\Personal_Code\LearningCode\ESKY\dex_encrypt.png)
-    <p><img src="D:\Develop\Android\Code\Personal_Code\LearningCode\ESKY\dex_encrypt.png" alt="cmd-markdown-logo" title="" /></p>
+    ![Image text](https://github.com/tangjian211085/ESKY/blob/master/dex_encrypt.png?raw=true)
