@@ -7,6 +7,7 @@ import android.view.View;
 import com.bhesky.app.bean.User;
 import com.bhesky.app.utils.sqlite.BaseDaoFactory;
 import com.puhui.lib.utils.DMLog;
+import com.puhui.lib.utils.ToastUtil;
 
 import java.util.List;
 
@@ -25,9 +26,8 @@ public class MainActivity extends AppCompatActivity {
 //        startService(new Intent(this, ProcessService.class));
     }
 
-    public native String stringFromJNI();
-
     public void insert(View view) {
+        ToastUtil.getInstant().show(this, "dex加密成功");
         BaseDaoFactory.getInstance().getBaseDao(User.class).insert(
                 new User("tangjian", 29, "421583199202116632", "123456"));
     }

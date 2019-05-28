@@ -1,5 +1,10 @@
 # ESKY
-NDK层实现进程保活（后续会完善到ndk使用双进程保活）、手写数据库框架(学习greenDao原理，持续完善中......)
+<ol>
+  <li>NDK层实现进程保活（后续会完善到ndk使用双进程保活）；</li>
+  <li>手写数据库框架(学习greenDao原理，持续完善中......)；</li>
+  <li>项目dex分包、代码混淆和dex加密</li>
+  <li>待续......</li>
+</ol>
 
 #### 进程保活目录
     \app\src\main\cpp\native-lib.cpp

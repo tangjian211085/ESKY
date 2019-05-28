@@ -29,6 +29,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
+        android:name="com.esky.proxy_core.ProxyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -53,6 +54,15 @@
         <activity android:name=".LoginActivity" />
 
         <service android:name=".ProcessService" />
+
+        <!-- 真是的application的全名 -->
+        <meta-data
+            android:name="app_name"
+            android:value="com.bhesky.app.base.KYApplication" />
+        <!-- 用于dex后的目录名_版本号 -->
+        <meta-data
+            android:name="app_version"
+            android:value="\esky_1.0" />
     </application>
 
 </manifest>

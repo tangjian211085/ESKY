@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.zip.GZIPInputStream;
@@ -163,5 +164,39 @@ public class FileUtils {
         }
 
         return null;
+    }
+
+    public static void saveFile(File desFile, File file) {
+        if (desFile.exists() && file.exists()) {
+            FileInputStream inputStream = null;
+            FileOutputStream outputStream = null;
+            try {
+                inputStream = new FileInputStream(file);
+                outputStream = new FileOutputStream(desFile);
+                byte[] buffer = new byte[2048];
+                int len;
+                while ((len = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, len);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (null != outputStream) {
+                    try {
+                        outputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (null != inputStream) {
+                    try {
+                        inputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
     }
 }

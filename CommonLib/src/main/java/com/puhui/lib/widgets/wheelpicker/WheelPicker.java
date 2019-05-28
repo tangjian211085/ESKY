@@ -576,7 +576,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                 mPaint.setAlpha(alpha);
             }
             // 根据卷曲与否计算数据项绘制Y方向中心坐标
-            // Correct item's drawn centerY base on curved state
+            // Correct item's drawn centerY com.bhesky.app.base on curved state
             int drawnCenterY = isCurved ? mDrawnCenterY - distanceToCenter : mDrawnItemCenterY;
 
             // 判断是否需要为当前数据项绘制不同颜色
@@ -699,7 +699,7 @@ public class WheelPicker extends View implements IDebug, IWheelPicker, Runnable 
                 mTracker.computeCurrentVelocity(1000, mMaximumVelocity);
 
                 // 根据速度判断是该滚动还是滑动
-                // Judges the WheelPicker is scroll or fling base on current velocity
+                // Judges the WheelPicker is scroll or fling com.bhesky.app.base on current velocity
                 isForceFinishScroll = false;
                 int velocity = (int) mTracker.getYVelocity();
                 if (Math.abs(velocity) > mMinimumVelocity) {

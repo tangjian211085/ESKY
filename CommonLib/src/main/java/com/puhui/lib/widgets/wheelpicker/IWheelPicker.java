@@ -405,7 +405,7 @@ public interface IWheelPicker {
      * Set whether WheelPicker enable curved effect or not
      * If setCurved true, WheelPicker will display with curved effect looks like ends bend into
      * screen with perspective.
-     * WheelPicker's curved effect base on strict geometric model, some parameters relate with size
+     * WheelPicker's curved effect com.bhesky.app.base on strict geometric model, some parameters relate with size
      * maybe invalidated, for example each item size looks like different because of perspective in
      * curved, the space between items looks like have a little difference
      *

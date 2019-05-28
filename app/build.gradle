@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
+
     defaultConfig {
         applicationId "com.bhesky.app"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -51,9 +52,9 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     def androidDependencies = rootProject.ext.androidDependencies
-//    def dataDependencies = rootProject.ext.dataDependencies
-
+    //    def dataDependencies = rootProject.ext.dataDependencies
     implementation androidDependencies.appcompat_v7
     implementation androidDependencies.constraint
     implementation project(':CommonLib')
+    implementation project(':proxy_core')
 }
