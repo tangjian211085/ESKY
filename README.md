@@ -8,6 +8,8 @@
 
 #### 进程保活目录
     \app\src\main\cpp\native-lib.cpp
+    ( AS 3.2.1   创建新项目时，在第一步勾选 Include C++ support，在最后一步C++ Standard选择C++11，创建项目后写C代码会有提示效果。
+    已有项目可将app/build.gradle文件下的cppFlags设置为: cppFlags "-std=c++11" )
 
 #### 数据库代码目录
     \app\src\main\java\com\bhesky\app\utils\sqlite
