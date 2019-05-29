@@ -13,7 +13,7 @@ android {
 
         externalNativeBuild {
             cmake {
-                cppFlags ""
+                cppFlags "-std=c++11"
                 //指定Android编译器
                 arguments "-DANDROID_TOOLCHAIN=gcc"
             }

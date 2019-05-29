@@ -19,7 +19,6 @@ void child_do_work(){
 * 客户端是apk进程
 */
 int child_create_channel(){
-
     //ip  端口  文件
     int listenFd = socket(AF_LOCAL, SOCK_STREAM, 0);
     // addr 内存区域
@@ -93,8 +92,7 @@ void child_listen_msg(){
 }
 
 
-extern "C"
-JNIEXPORT void JNICALL
+extern "C" JNIEXPORT void JNICALL
 Java_com_bhesky_app_Watcher_connectMonitor(JNIEnv *env, jobject instance){
     //客户端
     int socked;
@@ -130,8 +128,7 @@ Java_com_bhesky_app_Watcher_connectMonitor(JNIEnv *env, jobject instance){
 }
 
 
-extern "C"
-JNIEXPORT void JNICALL
+extern "C" JNIEXPORT void JNICALL
 Java_com_bhesky_app_Watcher_createWatcher(JNIEnv *env, jobject instance, jstring userId_){
     userId = env->GetStringUTFChars(userId_, 0);
 
@@ -147,12 +144,4 @@ Java_com_bhesky_app_Watcher_createWatcher(JNIEnv *env, jobject instance, jstring
     }
 
     env->ReleaseStringUTFChars(userId_, userId);
-}
-
-extern "C" JNIEXPORT jstring JNICALL
-Java_com_bhesky_app_MainActivity_stringFromJNI(
-        JNIEnv* env,
-        jobject /* this */) {
-    std::string hello = "Hello from C++";
-    return env->NewStringUTF(hello.c_str());
 }

@@ -41,4 +41,6 @@ public class MainActivity extends AppCompatActivity {
         List<User> all = BaseDaoFactory.getInstance().getBaseDao(User.class).findAll();
         DMLog.e(this.getClass().getCanonicalName(), "all.size() = " + all.size());
     }
+
+    public native String getString();
 }

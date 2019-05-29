@@ -18,6 +18,7 @@ import java.io.FilenameFilter;
  * 4、注释掉 exeFirstStep、exeSecondStep、exeThirdStep、exeFourthStep、exeFifthStep，在cmd窗口执行二、三
  * <p>
  * 如果Runtime.getRuntime().exec()没有问题，可以打开所有步骤注释，一次执行完毕
+ * 似乎这样子可以一次性执行完成:  cmd /c D:\Develop\Android\AndroidSDK\build-tools\27.0.2\dx --dex --output
  */
 public class Main {
     public static void main(String[] args) throws Exception {
