@@ -52,9 +52,13 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     def androidDependencies = rootProject.ext.androidDependencies
-    //    def dataDependencies = rootProject.ext.dataDependencies
     implementation androidDependencies.appcompat_v7
     implementation androidDependencies.constraint
+
+    def viewDependencies = rootProject.ext.viewDependencies
+    implementation viewDependencies.butterKnife
+    annotationProcessor viewDependencies.apt_butterKnife
+
     implementation project(':CommonLib')
     implementation project(':proxy_core')
 }

@@ -22,6 +22,7 @@ public class ProxyApplication extends Application {
     //定义好解密后的文件存放路径
     private String app_name;
     private String app_version;
+    private boolean isUseEncrypt = false;
 
     /**
      * ActivityThread在创建Application之后调用的第一个方法，
@@ -30,6 +31,9 @@ public class ProxyApplication extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
+        if (!isUseEncrypt) {
+            return;
+        }
 
         //获取用户填入的metaData;
         getMetaData();

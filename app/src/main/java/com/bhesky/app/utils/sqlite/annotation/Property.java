@@ -8,5 +8,9 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Property {
-    String columnName(); //列名, 即表字段名
+    //列名, 即表字段名 建表时使用
+    String columnName();
+
+    //数据库升级时用到， 发生数据库表该字段时， 某个字段对应在数据库原来的名字
+    String oldColumnName() default "";
 }

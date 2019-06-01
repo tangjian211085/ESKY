@@ -4,29 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <include layout="@layout/line_height_layout" />
+
     <TextView
         android:id="@+id/sample_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="insert"
-        android:text="Hello World!"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_45"
+        android:gravity="center"
+        android:onClick="sqliteFrame"
+        android:text="数据库框架"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <include layout="@layout/line_height_layout" />
+
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_45"
+        android:gravity="center"
         android:onClick="query"
         android:text="查询"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <include layout="@layout/line_height_layout" />
 
 </LinearLayout>

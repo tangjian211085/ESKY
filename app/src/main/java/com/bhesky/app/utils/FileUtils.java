@@ -1,4 +1,4 @@
 package com.bhesky.app.utils;
 
-public class ReflectUtils {
+public class FileUtils {
 }

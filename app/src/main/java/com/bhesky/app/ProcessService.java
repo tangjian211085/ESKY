@@ -32,12 +32,10 @@ public class ProcessService extends Service {
                 i++;
 
                 /**
-                 *
                  * 如果多次startService(new Intent(this, ProcessService.class));的话，就会多次调用
                  * watcher.createWatcher(String.valueOf(Process.myUid()));
                  *         watcher.connectMonitor();最终导致下面的log效果。
                  *         最好是能够做到判断是否有正在运行中的服务进程，没有的话才去重连。
-                 *
                  *
                  2019-04-27 02:53:27.504 8902-8919/com.bhesky.app I/System.out: 服务开启中 9
                  2019-04-27 02:53:27.504 8902-8919/com.bhesky.app I/System.out: 服务开启中 9

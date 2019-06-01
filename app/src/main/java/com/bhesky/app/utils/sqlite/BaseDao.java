@@ -3,57 +3,44 @@ package com.bhesky.app.utils.sqlite;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.TextUtils;
+import android.util.ArrayMap;
 
-import com.bhesky.app.utils.sqlite.annotation.Entity;
-import com.bhesky.app.utils.sqlite.annotation.Property;
 import com.puhui.lib.utils.DMLog;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * 在SQLite中查询一个表是否存在的方法：
+ * *      SELECT name FROM sqlite_master WHERE type=‘table’ AND name=‘table_name’;
+ * table_name就是传进去要查找的表的名字，当然也可以不要。这个语句会返回数据库中的表名字哦！
+ */
 public class BaseDao<T> implements IBaseDao<T> {
-    private SQLiteDatabase mSQLiteDatabase;
-    private String tableName;
-    private Class<T> entityClass;
-    private Map<String, Field> cacheMap; //缓存字段名、成员变量
-    private boolean isInit = false;
+    protected SQLiteDatabase mWritableDatabase;
+    protected SQLiteDatabase mReadableDatabase;
 
-    protected void init(SQLiteDatabase sqLiteDatabase, Class<T> entityType) {
-        this.mSQLiteDatabase = sqLiteDatabase;
+    protected String tableName;
+    protected Class<T> entityClass;
+    protected ArrayMap<String, Field> cacheMap; //缓存(表)字段名、成员变量
+
+    void init(SQLiteDatabase writableDatabase, Class<T> entityType) {
+        this.mWritableDatabase = writableDatabase;
         this.entityClass = entityType;
+        this.tableName = Utils.getTableName(entityType);
 
-        if (!isInit) {
-            isInit = true;
-            Entity annotation = entityType.getAnnotation(Entity.class);
-            if (null != annotation) {
-                tableName = annotation.value();
-                if (TextUtils.isEmpty(tableName)) {
-                    tableName = entityType.getSimpleName();
-                }
-            } else {
-                tableName = entityType.getSimpleName();
-            }
-
-            initCacheMap();
-            //创建数据库表
-            sqLiteDatabase.execSQL(getCreateTableSql());
-        }
+        initCacheMap();
+        //创建数据库表
+        writableDatabase.execSQL(Utils.getCreateTableSql(tableName, entityClass));
     }
 
     private void initCacheMap() {
-        cacheMap = new HashMap<>();
+        cacheMap = new ArrayMap<>();
         Field[] declaredFields = entityClass.getDeclaredFields();
         for (Field field : declaredFields) {
-            String fieldName = getFiledName(field);
+            String fieldName = Utils.getFiledName(field);  //得到表字段名
             //忽略默认字段: $change serialVersionUID
             if (fieldName.equals("$change") || fieldName.equals("serialVersionUID")) {
                 continue;
@@ -62,202 +49,213 @@ public class BaseDao<T> implements IBaseDao<T> {
         }
     }
 
-    private String getFiledName(Field field) {
-        String fieldName;
-        Property annotation = field.getAnnotation(Property.class);
-        if (null != annotation) {
-            fieldName = annotation.columnName();
-            if (TextUtils.isEmpty(fieldName)) {
-                fieldName = field.getName();
-            }
-        } else {
-            fieldName = field.getName();
-        }
-        return fieldName;
+    @Override
+    public synchronized int insert(T entity) {
+        openWritableDataBase();
+        //创建一个map
+        Map<String, Object> map = Utils.getKeyAndValue(cacheMap, entity);
+        ContentValues contentValues = Utils.getContentValues(map);
+        int result = (int) mWritableDatabase.insert(tableName, null, contentValues);
+        closeDataBase();
+        return result;
+    }
+
+    @Override
+    public synchronized int insertAll(List<T> entityList) {
+//        int result = insertAllBySqlExpr(entityList);  //方法是失败的，sql错误 ??????
+        return insertAllByContentValues(entityList);
     }
 
     /**
-     * @return 创建表的sql语句
+     * 通过sql语句插入数据
+     * <p>
+     * 批量插入数据的两种写法(第二种速度要快几十倍):
+     * INSERT INTO 'tablename' ('column1', 'column2') VALUES
+     * ('data1', 'data2'), ('data1', 'data2'), ('data1', 'data2'), ('data1', 'data2');
+     * <p>
+     * INSERT INTO 'tablename' SELECT 'data1' AS 'column1', 'data2' AS 'column2'
+     * UNION SELECT 'data3', 'data4'  UNION SELECT 'data5', 'data6'  UNION SELECT 'data7', 'data8'
      */
-    private String getCreateTableSql() {
-        //create table if not exists tableName (_id integer, name varchar(20), pwd varchar(32))
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append("create table if not exists ");
-        stringBuffer.append(tableName);
-        stringBuffer.append(" (");
-        Field[] declaredFields = entityClass.getDeclaredFields();
-        for (Field field : declaredFields) {
-            Class<?> type = field.getType();
-            //获取到成员变量的注解的值(表字段名)  忽略默认字段: $change serialVersionUID
-            String fieldName = getFiledName(field);
-            if (fieldName.equals("$change") || fieldName.equals("serialVersionUID")) {
-                continue;
-            }
+    private int insertAllBySqlExpr(List<T> entityList) {
+        int result = -1;
+        try {
+            if (null != entityList && entityList.size() > 0) {
+                StringBuilder expSb = new StringBuilder();
+                expSb.append("insert into ").append(tableName).append(" select ");
+                int size = entityList.size();
+                for (int i = 0; i < size; i++) {
+                    //得到表字段名，对象字段的值
+                    Map<String, Object> keyAndValue = Utils.getKeyAndValue(cacheMap, entityList.get(i));
+                    Set<String> strings = keyAndValue.keySet();
+                    if (i >= 1) {
+                        if (i == 1 && expSb.toString().endsWith(",")) {
+                            expSb = expSb.deleteCharAt(expSb.length() - 1);
+                        }
+                        expSb.append(" union select ");
+                    }
 
-            if (type == String.class) {
-                stringBuffer.append(fieldName);
-                stringBuffer.append(" varchar(20),");
-            } else if (type == Integer.class || type == int.class) {
-                stringBuffer.append(fieldName);
-                stringBuffer.append(" integer,");  //是否需要大写？？？
-            } else if (type == Double.class || type == double.class) {
-                stringBuffer.append(fieldName);
-                stringBuffer.append(" double,");
-            } else if (type == Float.class || type == float.class) {
-                stringBuffer.append(fieldName);
-                stringBuffer.append(" float,");
-            } else if (type == Long.class || type == long.class) {
-                stringBuffer.append(fieldName);
-                stringBuffer.append(" long,");
-            } else if (type == byte[].class) {
-                stringBuffer.append(fieldName);
-                stringBuffer.append(" blob,");
+                    for (String key : strings) {
+                        Object value = keyAndValue.get(key);
+//                        if (value.getClass() == Double.class || value.getClass() == double.class
+//                                || value.getClass() == Integer.class || value.getClass() == int.class
+//                                || value.getClass() == Long.class || value.getClass() == long.class
+//                                || value.getClass() == Float.class || value.getClass() == float.class
+//                                || value.getClass() == Byte.class || value.getClass() == byte.class
+//                                || value.getClass() == Byte[].class || value.getClass() == byte[].class
+//                                || value.getClass() == Short.class || value.getClass() == short.class
+//                                || value.getClass() == String.class) {
+                        if (i == 0) {
+                            expSb.append(key).append(" as ").append(value).append(",");
+                        } else {
+                            expSb.append(" ").append(value).append(",");
+                        }
+                    }
+                }
+                if (expSb.toString().endsWith(",")) {
+                    expSb = expSb.deleteCharAt(expSb.length() - 1);
+                }
+                DMLog.e(this.getClass().getCanonicalName(), expSb.toString());
+                mWritableDatabase.execSQL(expSb.toString());
+                result = entityList.size();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        if (stringBuffer.charAt(stringBuffer.length() - 1) == ',') {
-            stringBuffer.deleteCharAt(stringBuffer.length() - 1);
-        }
-
-        stringBuffer.append(")");
-        DMLog.e(this.getClass().getCanonicalName(), stringBuffer.toString());
-        return stringBuffer.toString();
+        return result;
     }
 
-
-    @Override
-    public int insert(T entity) {
-        //创建一个map
-        Map<String, String> map = getValue(entity);
-        ContentValues contentValues = getContentValues(map);
-        return (int) mSQLiteDatabase.insert(tableName, null, contentValues);
+    /**
+     * 通过ContentValues插入数据
+     * User结构: userName password idCardNum age
+     * *   开启事务10万条数据耗时: 4s、7.5s
+     * *        将User结构增加到20个字段后，插入10万数据耗时9488ms、9418ms、9430ms、10113ms
+     * *   四个字段不开启事务10万条数据耗时: 3分10秒
+     */
+    private int insertAllByContentValues(List<T> entityList) {
+        openWritableDataBase();
+        int result = -1;
+        if (null != entityList && entityList.size() > 0) {
+            long startTime = System.currentTimeMillis();
+            mWritableDatabase.beginTransaction();
+            try {
+                for (T entity : entityList) {
+                    Map<String, Object> map = Utils.getKeyAndValue(cacheMap, entity);
+                    ContentValues contentValues = Utils.getContentValues(map);
+                    result = (int) mWritableDatabase.insert(tableName, null, contentValues);
+                }
+                mWritableDatabase.setTransactionSuccessful();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                mWritableDatabase.endTransaction();
+                closeDataBase();
+            }
+            DMLog.e(this.getClass().getCanonicalName(),
+                    "插入数据库耗时：" + (System.currentTimeMillis() - startTime) + "ms");
+        }
+        return result;
     }
 
+    /**
+     * 需要一个无参的构造方法
+     */
     @Override
     public T findFirst() {
-        Cursor query = mSQLiteDatabase.query(tableName, null, null, null, null, null, null);
+        openReadableDataBase();
+        T entity = null;
+        Cursor query = mReadableDatabase.query(tableName,
+                null, null, null, null, null, null, "1");
+        String[] columnNames = query.getColumnNames();
+        DMLog.e(this.getClass().getCanonicalName(), columnNames.length + "");
+        Set<String> strings = cacheMap.keySet();
         if (query.moveToNext()) {
-            String[] columnNames = query.getColumnNames();
-            Set<String> strings = cacheMap.keySet();
             try {
-                T entity = entityClass.newInstance();
-
+                StringBuilder fieldSb = new StringBuilder("fieldName = ");
+                entity = entityClass.newInstance();
                 for (String key : strings) {
                     Field field = cacheMap.get(key);
-                    String fieldName = getFiledName(field);
+                    String fieldName = Utils.getFiledName(field);
                     for (String columnName : columnNames) {
                         if (columnName.equals(fieldName)) {
-                            DMLog.e(this.getClass().getCanonicalName(), "fieldName = " + fieldName);
-                            DMLog.e(this.getClass().getCanonicalName(), "columnNames.contains(fieldName) = " + true);
-
+                            fieldSb.append(fieldName).append(", ");
                             field.setAccessible(true);
-                            field.set(entity, getFiledValue(query, columnName, field));
+                            field.set(entity, Utils.getFiledValue(query, columnName, field.getType()));
                             break;
                         }
                     }
                 }
-                return entity;
+                if (fieldSb.toString().endsWith(", ")) {  //打印出字段名
+                    DMLog.e(this.getClass().getCanonicalName(), fieldSb.deleteCharAt(fieldSb.length() - 2).toString());
+                }
             } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
-        return null;
-    }
-
-    private Object getFiledValue(Cursor query, String columnName, Field field) {
-        Class<?> type = field.getType();
-        if (type == String.class) {
-            return query.getString(query.getColumnIndex(columnName));
-        } else if (type == Integer.class || type == int.class) {
-            return query.getInt(query.getColumnIndex(columnName));
-        } else if (type == Double.class || type == double.class) {
-            return query.getDouble(query.getColumnIndex(columnName));
-        } else if (type == Float.class || type == float.class) {
-            return query.getFloat(query.getColumnIndex(columnName));
-        } else if (type == Long.class || type == long.class) {
-            return query.getLong(query.getColumnIndex(columnName));
-        } else if (type == byte[].class) {
-            return query.getBlob(query.getColumnIndex(columnName));
-        }
-        return new Object();
+        closeDataBase();
+        return entity;
     }
 
     @Override
     public List<T> findBy(T entity) {
+        openReadableDataBase();
+        closeDataBase();
         return null;
     }
 
     @Override
-    public List<T> findAll() {
+    public List<T> findPage(int limit) {
+        openReadableDataBase();
+
         List<T> list = new ArrayList<>(5);
-        Cursor query = mSQLiteDatabase.query(tableName, null, null, null, null, null, null);
-        while (query.moveToNext()) {
-            String[] columnNames = query.getColumnNames();
-            Set<String> strings = cacheMap.keySet();
-            try {
-                Constructor<?>[] constructors = entityClass.getConstructors();
-                DMLog.e(this.getClass().getCanonicalName(), "构造方法数量是：" + constructors.length);
-
-                T entity = entityClass.newInstance();
-
-                for (String key : strings) {
-                    Field field = cacheMap.get(key);
-                    String fieldName = getFiledName(field);
-                    for (String columnName : columnNames) {
-                        if (columnName.equals(fieldName)) {
-                            field.setAccessible(true);
-                            field.set(entity, getFiledValue(query, columnName, field));
-                            break;
-                        }
-                    }
-                }
-                list.add(entity);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        Cursor query = mReadableDatabase.query(tableName,
+                null, null, null, null, null, null, String.valueOf(limit));
+        Utils.parseCursor(query, list, cacheMap, entityClass);
+        closeDataBase();
         return list;
     }
 
     /**
-     * 把所有要操作的数据从map中转移到contentValues
+     * User 20个字段
+     * 查询30万条数据耗时：1ms, 但是在解析数据时特别特别的耗时parseCursor: 68289ms
      */
-    private ContentValues getContentValues(Map<String, String> map) {
-        //创建一个ContentValues
-        ContentValues contentValues = new ContentValues();
-        //拿到map的keySet
-        Set<String> strings = map.keySet();
-        for (String key : strings) {
-            String value = map.get(key);
-            if (null != value) {
-                contentValues.put(key, value);
-            }
-        }
-        return contentValues;
+    @Override
+    public int queryTotalCount() {
+        openReadableDataBase();
+        long startTime = System.currentTimeMillis();
+        Cursor query = mReadableDatabase.query(tableName,
+                null, null, null, null, null, null);
+        DMLog.e(this.getClass().getCanonicalName(), "查询所有耗时：" + (System.currentTimeMillis() - startTime));
+        int totalCount = query.getCount();
+        query.close();
+        closeDataBase();
+        return totalCount;
+
+//        List<T> list = new ArrayList<>(5);
+//        Utils.parseCursor(query, list, cacheMap, entityClass);
+//        DMLog.e(this.getClass().getCanonicalName(), "解析数据耗时：" + (System.currentTimeMillis() - startTime));
+//        closeDataBase();
+//        return list;
+    }
+
+    protected void openWritableDataBase() {
+        mWritableDatabase = DaoFactory.getInstance().openWritableDataBase();
+    }
+
+    protected void openReadableDataBase() {
+        mReadableDatabase = DaoFactory.getInstance().openReadableDataBase();
     }
 
     /**
-     * 获取到对象中的属性值，并且按contentValues的格式存储起来
+     * 关闭数据库连接
      */
-    private Map<String, String> getValue(T entity) {
-        Map<String, String> map = new HashMap<>();
-        //从缓存map中获取到成员变量
-        Iterator<Field> iterator = cacheMap.values().iterator();
-        while (iterator.hasNext()) {
-            Field next = iterator.next();
-            next.setAccessible(true);
-            try {
-                //获取属性值
-                Object obj = next.get(entity);
-                if (null != obj) {
-                    String value = obj.toString();
-
-                    String fieldName = getFiledName(next);
-                    map.put(fieldName, value);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    protected void closeDataBase() {
+        if (null != mWritableDatabase && mWritableDatabase.isOpen()) {
+            mWritableDatabase.close();
         }
-        return map;
+
+        if (null != mReadableDatabase && mReadableDatabase.isOpen()) {
+            mReadableDatabase.close();
+        }
     }
+
 }

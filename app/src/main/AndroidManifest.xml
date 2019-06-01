@@ -52,6 +52,7 @@
         </activity>
 
         <activity android:name=".LoginActivity" />
+        <activity android:name=".SqliteActivity" />
 
         <service android:name=".ProcessService" />
 

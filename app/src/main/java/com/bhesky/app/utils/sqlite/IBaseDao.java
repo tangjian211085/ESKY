@@ -5,9 +5,13 @@ import java.util.List;
 public interface IBaseDao<T> {
     int insert(T entity);
 
+    int insertAll(List<T> entityList);
+
     T findFirst();
 
     List<T> findBy(T entity);
 
-    List<T> findAll();
+    int queryTotalCount();
+
+    List<T> findPage(int limit);
 }
