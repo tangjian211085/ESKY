@@ -47,7 +47,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
                     try {
                         if (updateSql.length() > 0)
                             updateSql = updateSql.delete(0, updateSql.length());  //清空renameSql
-                        String tempTableName = tableName + "_temp";
+                        String tempTableName = tableName.concat("_temp");
 //                            // 1、将原有表重命名
                         updateSql.append("ALTER TABLE ").append(tableName).append(" RENAME TO ").append(tempTableName);
                         db.execSQL(updateSql.toString());

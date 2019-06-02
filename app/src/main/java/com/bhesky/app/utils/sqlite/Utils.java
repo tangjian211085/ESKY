@@ -94,12 +94,10 @@ class Utils {
         ContentValues contentValues = new ContentValues();
         //拿到map的keySet
         Set<String> strings = map.keySet();
-        Object value; //字段值
-        Class clazz;  //字段类型
         for (String key : strings) {
-            value = map.get(key);
+            Object value = map.get(key); //字段值
             if (null != value) {
-                clazz = value.getClass();
+                Class clazz = value.getClass();  //字段类型
                 if (clazz == Double.class || clazz == double.class) {
                     contentValues.put(key, (Double) value);
                 } else if (clazz == Integer.class || clazz == int.class) {
@@ -132,15 +130,12 @@ class Utils {
     static <T> void parseCursor(Cursor cursor, List<T> entityList, Map<String, Field> cacheMap, Class<T> entityClass) {
         String[] columnNames = cursor.getColumnNames();
         Set<String> strings = cacheMap.keySet();
-        Field field;
-        String fieldName;
-        T entity;
         while (cursor.moveToNext()) {
             try {
-                entity = entityClass.newInstance();
+                T entity = entityClass.newInstance();
                 for (String key : strings) {
-                    field = cacheMap.get(key);
-                    fieldName = getFiledName(field);
+                    Field field = cacheMap.get(key);
+                    String fieldName = getFiledName(field);
                     for (String columnName : columnNames) {
                         if (columnName.equals(fieldName)) {
                             field.setAccessible(true);
@@ -188,9 +183,8 @@ class Utils {
         Map<String, Object> kayAndValue = new ArrayMap<>();  //表字段名 : 表字段值
         //从缓存map中获取到成员变量
         Set<String> fieldNames = cacheMap.keySet();
-        Field next;
         for (String fieldName : fieldNames) {
-            next = cacheMap.get(fieldName);
+            Field next = cacheMap.get(fieldName);
             next.setAccessible(true);
             try {
                 //获取属性值
@@ -218,5 +212,59 @@ class Utils {
             tableName = entityType.getSimpleName();
         }
         return tableName;
+    }
+
+    /**
+     * 创建Sql语句:
+     * *      "insert into radiomap (location,ap1,ap2) select 'x=1,y=1',-80,-73 " +
+     * * *    "union all select 'x=2,y=3',80,40 union all select 'x=3,y=5',30,20 " + ......
+     */
+    static <T> String createInsertAllBySqlExpr(String tableName, ArrayMap<String, Field> cacheMap, List<T> entityList) {
+        StringBuilder expSb = new StringBuilder();
+        expSb.append("insert into ").append(tableName).append(" (");
+        int size = entityList.size();
+        //得到表字段名，对象字段的值
+        Map<String, Object> keyAndValue = Utils.getKeyAndValue(cacheMap, entityList.get(0));
+        Set<String> strings = keyAndValue.keySet();
+        for (String key : strings) {
+            expSb.append(key).append(",");
+        }
+        expSb.deleteCharAt(expSb.length() - 1).append(") select ");
+        for (String key : strings) {
+            Object value = keyAndValue.get(key);
+            Class clazz = value.getClass();
+            if (clazz == Byte[].class || clazz == byte[].class) {
+                expSb.append("'").append(new String((byte[]) value)).append("',");
+            } else if (clazz == String.class || clazz == Boolean.class || clazz == boolean.class) {
+                expSb.append("'").append(value).append("',");
+            } else {
+                expSb.append(value).append(",");
+            }
+        }
+        expSb.deleteCharAt(expSb.length() - 1).append(" ");
+
+        for (int i = 1; i < size; i++) {
+            expSb.append(" union all select ");
+            keyAndValue = Utils.getKeyAndValue(cacheMap, entityList.get(i));
+            strings = keyAndValue.keySet();
+            for (String key : strings) {
+                Object value = keyAndValue.get(key);
+                Class clazz = value.getClass();
+                if (clazz == Byte[].class || clazz == byte[].class) {
+                    expSb.append("'").append(new String((byte[]) value)).append("',");
+                } else if (clazz == String.class || clazz == Boolean.class || clazz == boolean.class) {
+                    expSb.append("'").append(value).append("',");
+                } else {
+                    expSb.append(value).append(",");
+                }
+            }
+            expSb.deleteCharAt(expSb.length() - 1).append(" ");
+        }
+
+        if (expSb.toString().endsWith(",")) {
+            expSb = expSb.deleteCharAt(expSb.length() - 1);
+        }
+//        DMLog.e(expSb.toString());
+        return expSb.toString();
     }
 }

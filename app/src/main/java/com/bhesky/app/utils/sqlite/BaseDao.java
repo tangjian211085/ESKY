@@ -60,62 +60,51 @@ public class BaseDao<T> implements IBaseDao<T> {
         return result;
     }
 
+    /**
+     * 两种方式耗时对比：
+     * <p>
+     * insertAllBySqlExpr耗时记录：（该方式一次最多插入500条数据，插入501条数据就报异常：SQLiteException  too many terms in compound SELECT
+     * *    100条数据：28ms、27ms    500条数据：60ms  55ms  72ms
+     * insertAllByContentValues耗时记录  可以插入任意多条数据 开启事务后速度很快
+     * *    100条数据：90ms、84、83、81、82、82、87、73
+     * *    500条数据：411ms 323ms 288ms 281ms 262ms 261ms 255ms 250ms 255ms 252ms 259ms 250ms
+     */
     @Override
     public synchronized int insertAll(List<T> entityList) {
-//        int result = insertAllBySqlExpr(entityList);  //方法是失败的，sql错误 ??????
-        return insertAllByContentValues(entityList);
+        if (null == entityList || entityList.size() == 0) {
+            return -1;
+        }
+
+//        return insertAllByContentValues(entityList);
+//        return insertAllBySqlExpr(entityList);
+        return entityList.size() > 500
+                ? insertAllByContentValues(entityList) : insertAllBySqlExpr(entityList);
     }
 
     /**
      * 通过sql语句插入数据
-     * <p>
-     * 批量插入数据的两种写法(第二种速度要快几十倍):
-     * INSERT INTO 'tablename' ('column1', 'column2') VALUES
-     * ('data1', 'data2'), ('data1', 'data2'), ('data1', 'data2'), ('data1', 'data2');
-     * <p>
-     * INSERT INTO 'tablename' SELECT 'data1' AS 'column1', 'data2' AS 'column2'
-     * UNION SELECT 'data3', 'data4'  UNION SELECT 'data5', 'data6'  UNION SELECT 'data7', 'data8'
+     * *    "insert into radiomap (location,ap1,ap2) select 'x=1,y=1',-80,-73 " +
+     * *    "union all select 'x=2,y=3',80,40 union all select 'x=3,y=5',30,20 " +
+     * *    "union all select 'x=4,y=5',3,2 union all select 'x=30,y=50',30,20 union all select 'x=3,y=5',40,20"
+     * *
+     * 该方法插入数据耗时记录：（该方式一次最多插入500条数据，插入501条数据就报异常：SQLiteException  too many terms in compound SELECT）
+     * *    谷歌模拟器:  100条数据：28ms、27ms、31ms       500条数据：60ms  55ms  72ms
+     * *    华为P10:    100条数据：12ms、14、15、14、15    500条数据: 41ms、42、42、44、42、48
+     * insertAllByContentValues方法插入数据耗时记录
+     * *    100条数据(谷歌模拟器)：90ms、84、83、81、82、82、87、73
+     * *    500条数据(谷歌模拟器)：411ms 323ms 288ms 281ms 262ms 261ms 255ms 250ms 255ms 252ms 259ms 250ms
      */
     private int insertAllBySqlExpr(List<T> entityList) {
         int result = -1;
         try {
             if (null != entityList && entityList.size() > 0) {
                 StringBuilder expSb = new StringBuilder();
-                expSb.append("insert into ").append(tableName).append(" select ");
-                int size = entityList.size();
-                for (int i = 0; i < size; i++) {
-                    //得到表字段名，对象字段的值
-                    Map<String, Object> keyAndValue = Utils.getKeyAndValue(cacheMap, entityList.get(i));
-                    Set<String> strings = keyAndValue.keySet();
-                    if (i >= 1) {
-                        if (i == 1 && expSb.toString().endsWith(",")) {
-                            expSb = expSb.deleteCharAt(expSb.length() - 1);
-                        }
-                        expSb.append(" union select ");
-                    }
-
-                    for (String key : strings) {
-                        Object value = keyAndValue.get(key);
-//                        if (value.getClass() == Double.class || value.getClass() == double.class
-//                                || value.getClass() == Integer.class || value.getClass() == int.class
-//                                || value.getClass() == Long.class || value.getClass() == long.class
-//                                || value.getClass() == Float.class || value.getClass() == float.class
-//                                || value.getClass() == Byte.class || value.getClass() == byte.class
-//                                || value.getClass() == Byte[].class || value.getClass() == byte[].class
-//                                || value.getClass() == Short.class || value.getClass() == short.class
-//                                || value.getClass() == String.class) {
-                        if (i == 0) {
-                            expSb.append(key).append(" as ").append(value).append(",");
-                        } else {
-                            expSb.append(" ").append(value).append(",");
-                        }
-                    }
-                }
-                if (expSb.toString().endsWith(",")) {
-                    expSb = expSb.deleteCharAt(expSb.length() - 1);
-                }
-                DMLog.e(this.getClass().getCanonicalName(), expSb.toString());
+                expSb.append(Utils.createInsertAllBySqlExpr(tableName, cacheMap, entityList));
+                long startTime = System.currentTimeMillis();
+                openWritableDataBase();
                 mWritableDatabase.execSQL(expSb.toString());
+                closeDataBase();
+                DMLog.e(this.getClass().getCanonicalName(), "插入数据库耗时：" + (System.currentTimeMillis() - startTime));
                 result = entityList.size();
             }
         } catch (Exception e) {
@@ -127,9 +116,12 @@ public class BaseDao<T> implements IBaseDao<T> {
     /**
      * 通过ContentValues插入数据
      * User结构: userName password idCardNum age
-     * *   开启事务10万条数据耗时: 4s、7.5s
-     * *        将User结构增加到20个字段后，插入10万数据耗时9488ms、9418ms、9430ms、10113ms
-     * *   四个字段不开启事务10万条数据耗时: 3分10秒
+     * *   开启事务10万条数据耗时(逍遥安卓模拟器): 4s、7.5s
+     * *   四个字段不开启事务10万条数据耗时(逍遥安卓模拟器): 3分10秒
+     * *
+     * 将User结构增加到20个字段后，开启事务插入10万数据耗时:
+     * * 逍遥安卓模拟器： 9488ms、9418ms、9430ms、10113ms
+     * * 华为P10： 6580ms、6278ms、6322ms、6299ms、6323ms、6291ms
      */
     private int insertAllByContentValues(List<T> entityList) {
         openWritableDataBase();

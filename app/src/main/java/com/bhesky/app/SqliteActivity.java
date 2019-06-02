@@ -64,6 +64,40 @@ public class SqliteActivity extends AppCompatActivity {
         }
     }
 
+//    /**
+//     * 　排序后打印二维数组，一行行打印
+//     */
+//    public void imPrettySureSortingIsFree() {
+//        int dimension = 300;
+//        int[][] lotsOfInts = new int[dimension][dimension];
+//        Random randomGenerator = new Random();
+//        for (int i = 0; i < lotsOfInts.length; i++) {
+//            for (int j = 0; j < lotsOfInts[i].length; j++) {
+//                lotsOfInts[i][j] = randomGenerator.nextInt();
+//            }
+//        }
+//
+//        for (int i = 0; i < lotsOfInts.length; i++) {
+//            String rowAsStr = "";
+//            //排序
+//            int[] sorted = getSorted(lotsOfInts[i]);
+//            //拼接打印
+//            for (int j = 0; j < lotsOfInts[i].length; j++) {
+//                rowAsStr += sorted[j];
+//                if (j < (lotsOfInts[i].length - 1)) {
+//                    rowAsStr += ", ";
+//                }
+//            }
+//            Log.i("ricky", "Row " + i + ": " + rowAsStr);
+//        }
+//    }
+//
+//    public int[] getSorted(int[] input) {
+//        int[] clone = input.clone();
+//        Arrays.sort(clone);
+//        return clone;
+//    }
+
     private void showToast(String content) {
         ToastUtil.getInstant().show(this, content);
     }
@@ -79,7 +113,7 @@ public class SqliteActivity extends AppCompatActivity {
             @Override
             public void run() {
                 List<User> users = new ArrayList<>();
-                for (int i = 1; i < 100; i++) {
+                for (int i = 0; i < 500; i++) {
                     users.add(newUser(i));
                 }
                 mBaseDao.insertAll(users);
@@ -113,8 +147,8 @@ public class SqliteActivity extends AppCompatActivity {
             for (byte b : user.photo) {
                 bytes.append(b);
             }
-            DMLog.e(this.getClass().getCanonicalName(), "存入时photo内容：" + byte2.toString());
-            DMLog.e(this.getClass().getCanonicalName(), "photo内容：" + bytes.toString());
+            DMLog.e(this.getClass().getCanonicalName(), "存入时photo内容：".concat(byte2.toString()));
+            DMLog.e(this.getClass().getCanonicalName(), "photo内容：".concat(bytes.toString()));
             showToast(user.getHomeAddress() + user.isVip());
         }
     }
