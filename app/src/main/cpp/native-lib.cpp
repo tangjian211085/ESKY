@@ -8,10 +8,7 @@ int m_child;
 const char *userId;
 
 void child_do_work() {
-    //开启socket 服务端    会不会fork出多个服务端进程出来呢。。。然后这些个进程永远杀不死
-    //是不是能够检测是否已有某个进程是可以启动客户端Service的，如果有，那么就不需要重新fork进程了；
-    // 没有的话就fork出一个新的进程来作为服务端，然后调用Java代码将这个服务端进程的pid传过去，并保存到数据库或sp
-    // 下次调用进程保活方法时将该pid也传过来做验证。
+    //开启socket 服务端
     if (child_create_channel()) {
         child_listen_msg();
     }
@@ -66,14 +63,16 @@ int child_create_channel() {
 * 创建服务端的socket
 */
 void child_listen_msg() {
-    fd_set rfds;
+    fd_set fdSet;
     struct timeval timeout = {3, 0};
     while (1) {
         //清空内容
-        FD_ZERO(&rfds);
-        FD_SET(m_child, &rfds);
-        //4个客户端
-        int r = select(m_child + 1, &rfds, NULL, NULL, &timeout);
+        FD_ZERO(&fdSet);
+        FD_SET(m_child, &fdSet);
+
+        //如果是两个客户端就在原来的基础上+1 以此类推，最后一个参数是找到他的时间超过3秒就是超时
+        //select会先执行，会找到m_child对应的文件如果找到就返回大于0的值，进程就会阻塞没找到就不会
+        int r = select(m_child + 1, &fdSet, NULL, NULL, &timeout);
         LOGE("读取消息前  %d", r);
         sleep(5);
         if (r > 0) {
@@ -81,14 +80,14 @@ void child_listen_msg() {
             char pkg[256] = {0};
 
             //保证所读到的信息是  指定apk客户端
-            if (FD_ISSET(m_child, &rfds)) {
+            if (FD_ISSET(m_child, &fdSet)) {
                 //阻塞式函数  其实这里什么都不用读
-                int result = read(m_child, pkg, sizeof(pkg));
+//                int result = read(m_child, pkg, sizeof(pkg));
 
                 LOGE("userId is %s", userId);
                 //是否可以判断该服务是否已开启呢？？？
                 execlp("am", "am", "startservice", "--user", userId,
-                       "com.bhesky.app/com.bhesky.app.ProcessService", (char *) NULL);
+                       "com.bhesky.app/com.bhesky.app.services.LocalService", (char *) NULL);
                 return;
             }
         }
@@ -98,7 +97,7 @@ void child_listen_msg() {
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_bhesky_app_Watcher_connectMonitor(JNIEnv *env, jobject instance) {
+Java_com_bhesky_app_services_Watcher_connectMonitor(JNIEnv *env, jclass type) {
     //客户端
     int socked;
     // addr 内存区域
@@ -122,7 +121,7 @@ Java_com_bhesky_app_Watcher_connectMonitor(JNIEnv *env, jobject instance) {
         if (connect(socked, (const sockaddr *) &addr, sizeof(sockaddr_un)) < 0) {
             LOGE("connect 连接失败");
             close(socked);
-            sleep(2);
+            sleep(5);
             continue;  //睡眠两秒尝试下一次连接
         }
 
@@ -135,7 +134,7 @@ Java_com_bhesky_app_Watcher_connectMonitor(JNIEnv *env, jobject instance) {
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_bhesky_app_Watcher_createWatcher(JNIEnv *env, jobject instance, jstring userId_) {
+Java_com_bhesky_app_services_Watcher_createWatcher(JNIEnv *env, jclass type, jstring userId_) {
     userId = env->GetStringUTFChars(userId_, 0);
 
     //开启双进程

@@ -1,7 +1,6 @@
 package com.puhui.lib.utils;
 
 import android.app.Activity;
-import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,19 +99,6 @@ public class AppManager {
         } else {
             return 0;
         }
-
-    }
-
-    /**
-     * 结束所有Activity
-     */
-    public void finishAllActivity() {
-        for (int i = 0, size = activityStack.size(); i < size; i++) {
-            if (null != activityStack.get(i)) {
-                activityStack.get(i).finish();
-            }
-        }
-        activityStack.clear();
     }
 
     /**
@@ -161,7 +147,7 @@ public class AppManager {
     /**
      * 退出应用程序
      */
-    public void AppExit(Context context) {
+    public void AppExit() {
         try {
             finishAllActivity();
             // 杀死该应用进程
@@ -170,5 +156,17 @@ public class AppManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 结束所有Activity
+     */
+    private void finishAllActivity() {
+        for (int i = 0, size = activityStack.size(); i < size; i++) {
+            if (null != activityStack.get(i)) {
+                activityStack.get(i).finish();
+            }
+        }
+        activityStack.clear();
     }
 }

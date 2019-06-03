@@ -1,9 +1,8 @@
-package com.bhesky.app;
+package com.bhesky.app.services;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.os.Process;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -20,9 +19,9 @@ public class ProcessService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Watcher watcher = new Watcher();
-        watcher.createWatcher(String.valueOf(Process.myUid()));
-        watcher.connectMonitor();
+//        Watcher watcher = new Watcher();
+//        watcher.createWatcher(String.valueOf(Process.myUid()));
+//        watcher.connectMonitor();
 
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {

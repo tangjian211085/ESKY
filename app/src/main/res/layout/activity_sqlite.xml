@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".ui.MainActivity">
+
+    <include layout="@layout/title_layout" />
 
     <include layout="@layout/line_height_layout" />
 

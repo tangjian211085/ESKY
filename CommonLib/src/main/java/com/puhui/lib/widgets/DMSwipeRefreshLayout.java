@@ -60,7 +60,7 @@ public class DMSwipeRefreshLayout extends SwipeRefreshLayout {
                 break;
             case MotionEvent.ACTION_UP:
                 if (Math.abs(ev.getX() - donwX) < 5 && Math.abs(ev.getY() - donwY) < 5) {
-//                    ToastUtil.getInstant().show(getContext(), "action_up");
+//                    ToastUtil.getInstance().show(getContext(), "action_up");
                     return false;
                 }
                 break;

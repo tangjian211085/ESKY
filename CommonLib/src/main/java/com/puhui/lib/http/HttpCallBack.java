@@ -56,14 +56,14 @@ public abstract class HttpCallBack {
             Activity activity = AppManager.getAppManager().currentActivity();
             String message;
             if (null != activity && null != t) {
-                ToastUtil.getInstant().show(activity, "网络连接失败，请稍后重试");
+                ToastUtil.getInstance().show(activity, "网络连接失败，请稍后重试");
                 if (!NetworkUtils.isNetworkAvailable(activity)) {
                     onNetworkError();
                 } else if (t instanceof HttpException) {
                     DMLog.e(this.getClass().getSimpleName(), "连接服务器失败：" + t.getMessage());
                 } else if (t instanceof SocketTimeoutException) {
                     message = "请求超时，请稍后再试";
-                    ToastUtil.getInstant().show(activity, message);
+                    ToastUtil.getInstance().show(activity, message);
                 } else if (t instanceof ConnectException) {
                     DMLog.e(this.getClass().getSimpleName(), "连接服务器失败：" + t.getMessage());
                 } else if (t instanceof IOException) {

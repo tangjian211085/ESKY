@@ -1,25 +1,29 @@
-package com.bhesky.app;
+package com.bhesky.app.ui.test;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.TextView;
 
+import com.bhesky.app.R;
 import com.bhesky.app.bean.User;
 import com.bhesky.app.bean.UserDao;
 import com.bhesky.app.utils.sqlite.DaoFactory;
+import com.puhui.lib.base.BaseActivity;
 import com.puhui.lib.utils.DMLog;
 import com.puhui.lib.utils.SharedPreferenceUtils;
-import com.puhui.lib.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class SqliteActivity extends AppCompatActivity {
+public class SqliteActivity extends BaseActivity {
+    @BindView(R.id.title_text)
+    TextView titleText;
     private Unbinder mUnbinder;
     private UserDao<User> mBaseDao;
 
@@ -32,11 +36,16 @@ public class SqliteActivity extends AppCompatActivity {
         //模拟数据库升级
         SharedPreferenceUtils.put(this, SharedPreferenceUtils.ACCESS_COOKIE, 1);
         mBaseDao = DaoFactory.getInstance().getDao(UserDao.class, User.class);
+        titleText.setText("数据库");
     }
 
-    @OnClick({R.id.insert, R.id.insertAll, R.id.query, R.id.queryAll, R.id.update, R.id.updateAll, R.id.delete, R.id.deleteAll})
+    @OnClick({R.id.insert, R.id.insertAll, R.id.query, R.id.queryAll, R.id.update, R.id.updateAll, R.id.delete,
+            R.id.deleteAll, R.id.btn_back})
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.btn_back:
+                finish();
+                break;
             case R.id.insert:
                 insertOne();
                 break;
@@ -97,10 +106,6 @@ public class SqliteActivity extends AppCompatActivity {
 //        Arrays.sort(clone);
 //        return clone;
 //    }
-
-    private void showToast(String content) {
-        ToastUtil.getInstant().show(this, content);
-    }
 
     private void insertOne() {
         User user = newUser(0);

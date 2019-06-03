@@ -37,4 +37,9 @@ public interface PHConstant {
         String SUCCESS = "000000";
     }
 
+    interface DataBase {
+        int Version = 2;  //需要升级的时候，将该值+1
+        boolean needUpdate = false;  //是否需要升级
+    }
+
 }

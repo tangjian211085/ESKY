@@ -41,7 +41,7 @@ public class HttpUtils {
 
     private boolean canSendRequest(Context context) {
         if (!NetworkUtils.isNetworkAvailable(context)) {
-            ToastUtil.getInstant().show(context, "网络连接异常");
+            ToastUtil.getInstance().show(context, "网络连接异常");
             return false;
         }
         return true;

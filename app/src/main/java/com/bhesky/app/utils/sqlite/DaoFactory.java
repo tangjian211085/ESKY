@@ -23,40 +23,42 @@ public class DaoFactory {
     private ArrayMap<Class, Object> mDaoMap = new ArrayMap<>();
     private MySQLiteOpenHelper mOpenHelper;
 
+
+    public static DaoFactory getInstance() {
+        if (null == instance) {
+            synchronized (DaoFactory.class) {
+                if (null == instance) {
+                    instance = new DaoFactory();
+                }
+            }
+        }
+        return instance;
+    }
+
     /**
      * 主要用来初始化，并检查是否数据库升级
      *
      * @param sqliteVersion 数据库升级后的版本
      * @param clazz         本次升级数据库需要更新的表
      */
-    public static void checkUpdate(Context context, int sqliteVersion, Class... clazz) {
-        if (null == instance) {
-            synchronized (DaoFactory.class) {
-                if (null == instance) {
-                    instance = new DaoFactory(context.getApplicationContext(), sqliteVersion, clazz);
-                }
-            }
-        }
-    }
-
-    public static DaoFactory getInstance() {
-        if (null == instance) {
-            throw new RuntimeException("method checkUpdate(Context context...) must be called first");
-        }
-        return instance;
-    }
-
-    /**
-     * 创建数据库 同时返回该数据库的操作对象  QLiteDatabase.openOrCreateDatabase(dataBasePath, null);
-     */
-    private DaoFactory(Context context, int sqliteVersion, Class... clazz) {
+    public void init(Context context, int sqliteVersion, Class... clazz) {
         //根据BuildConfig.VERSION_CODE来确定数据库版本  最好通过自定义build.gradle的属性来配置数据库版本号
         mOpenHelper = new MySQLiteOpenHelper(context, sqliteVersion, clazz);
         mWritableDataBase = mOpenHelper.getWritableDatabase();
         mReadableDataBase = mOpenHelper.getReadableDatabase();
     }
 
+    /**
+     * 创建数据库 同时返回该数据库的操作对象  QLiteDatabase.openOrCreateDatabase(dataBasePath, null);
+     */
+    private DaoFactory() {
+    }
+
     public <T, D extends BaseDao<T>> D getDao(Class<D> daoClazz, Class<T> entityClazz) {
+        if (null == mOpenHelper) {
+            throw new RuntimeException("method init(Context context...) must be called first");
+        }
+
         Object object = mDaoMap.get(entityClazz);
         if (null != object && object.getClass() == daoClazz) {
             DMLog.e(this.getClass().getCanonicalName(), "reuse object: " + object.toString());

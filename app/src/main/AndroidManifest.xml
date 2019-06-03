@@ -36,7 +36,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".ui.SplashActivity"
+            android:theme="@style/Theme.AppStartLoad">
             <intent-filter>
                 <!-- 警告App is not indexable by Google Search
                 在AndroidManifest.xml文件中，至少一个activity的intent-filter中添加下面一行 -->
@@ -51,10 +53,20 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".SqliteActivity" />
+        <activity android:name=".ui.LoginActivity" />
+        <activity android:name=".ui.test.SqliteActivity" />
+        <activity android:name=".ui.MainActivity" />
 
-        <service android:name=".ProcessService" />
+        <service android:name=".services.ProcessService" />
+
+        <service
+            android:name=".services.RemoteService"
+            android:process=":remote" />
+        <service
+            android:name=".services.RemoteService$InnerService"
+            android:process=":remote" />
+        <service android:name=".services.LocalService" />
+        <service android:name=".services.LocalService$InnerService" />
 
         <!-- 真是的application的全名 -->
         <meta-data

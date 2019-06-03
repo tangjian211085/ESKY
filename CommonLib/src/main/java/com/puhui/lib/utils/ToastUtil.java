@@ -14,7 +14,7 @@ import android.widget.Toast;
 public class ToastUtil {
     private static ToastUtil util;
 
-    public static ToastUtil getInstant() {
+    public static ToastUtil getInstance() {
         if (util == null) {
             synchronized (ToastUtil.class) {
                 if (null == util) {

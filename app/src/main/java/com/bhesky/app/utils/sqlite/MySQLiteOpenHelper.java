@@ -15,11 +15,12 @@ import java.lang.reflect.Field;
 
 public class MySQLiteOpenHelper extends SQLiteOpenHelper {
     private static final String dbName = "sqlite_test.db";
+    private static final String databasePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/database/";
     private Class[] updateClazzs;
 
     public MySQLiteOpenHelper(Context context, int version, Class... clazz) {
-        // "/mnt/sdcard/database/" +
-        super(context, Environment.getExternalStorageDirectory().getAbsolutePath() + "/database/" + dbName, null, version);
+//        super(context, databasePath + dbName, null, version);
+        super(context, dbName, null, version);
         updateClazzs = clazz;
     }
 

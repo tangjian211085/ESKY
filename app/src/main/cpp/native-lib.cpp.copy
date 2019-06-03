@@ -3,16 +3,16 @@
 #include "native_lib.h"
 
 
-const char *PATH="/data/data/com.bhesky.app/my.sock";
+const char *PATH = "/data/data/com.bhesky.app/my.sock";
 int m_child;
 const char *userId;
 
-void child_do_work(){
+void child_do_work() {
     //开启socket 服务端    会不会fork出多个服务端进程出来呢。。。然后这些个进程永远杀不死
     //是不是能够检测是否已有某个进程是可以启动客户端Service的，如果有，那么就不需要重新fork进程了；
     // 没有的话就fork出一个新的进程来作为服务端，然后调用Java代码将这个服务端进程的pid传过去，并保存到数据库或sp
     // 下次调用进程保活方法时将该pid也传过来做验证。
-    if(child_create_channel()){
+    if (child_create_channel()) {
         child_listen_msg();
     }
 }
@@ -21,7 +21,7 @@ void child_do_work(){
 * 服务端读取信息
 * 客户端是apk进程
 */
-int child_create_channel(){
+int child_create_channel() {
     //ip  端口  文件
     int listenFd = socket(AF_LOCAL, SOCK_STREAM, 0);
     // addr 内存区域
@@ -35,7 +35,7 @@ int child_create_channel(){
 
     strcpy(addr.sun_path, PATH);
 
-    if(bind(listenFd, (const sockaddr *) &addr, sizeof(sockaddr_un)) < 0){
+    if (bind(listenFd, (const sockaddr *) &addr, sizeof(sockaddr_un)) < 0) {
         LOGE("绑定错误");
         return 0;
     }
@@ -43,10 +43,10 @@ int child_create_channel(){
     int connFd = 0;
     listen(listenFd, 5);
     // 保证宿主进程（客户端）连接成功
-    while(1){
+    while (1) {
         //返回值  客户端地址  阻塞式函数
-        if((connFd = accept(listenFd, NULL, NULL)) < 0){
-            if(errno == EINTR){
+        if ((connFd = accept(listenFd, NULL, NULL)) < 0) {
+            if (errno == EINTR) {
                 continue;
             } else {
                 LOGE("读取错误");
@@ -65,30 +65,30 @@ int child_create_channel(){
 /**
 * 创建服务端的socket
 */
-void child_listen_msg(){
+void child_listen_msg() {
     fd_set rfds;
     struct timeval timeout = {3, 0};
-    while(1){
+    while (1) {
         //清空内容
         FD_ZERO(&rfds);
         FD_SET(m_child, &rfds);
         //4个客户端
         int r = select(m_child + 1, &rfds, NULL, NULL, &timeout);
         LOGE("读取消息前  %d", r);
-        sleep(2);
-        if(r > 0){
+        sleep(5);
+        if (r > 0) {
             //缓冲区
             char pkg[256] = {0};
 
             //保证所读到的信息是  指定apk客户端
-            if(FD_ISSET(m_child, &rfds)){
+            if (FD_ISSET(m_child, &rfds)) {
                 //阻塞式函数  其实这里什么都不用读
                 int result = read(m_child, pkg, sizeof(pkg));
 
                 LOGE("userId is %s", userId);
-                //是否可以判断该服务是否已开启呢？？？如果已开启了，就不用重复开启了。
+                //是否可以判断该服务是否已开启呢？？？
                 execlp("am", "am", "startservice", "--user", userId,
-                 "com.bhesky.app/com.bhesky.app.ProcessService", (char*)NULL);
+                       "com.bhesky.app/com.bhesky.app.services.ProcessService", (char *) NULL);
                 return;
             }
         }
@@ -98,16 +98,16 @@ void child_listen_msg(){
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_bhesky_app_Watcher_connectMonitor(JNIEnv *env, jobject instance){
+Java_com_bhesky_app_services_Watcher_connectMonitor(JNIEnv *env, jobject instance) {
     //客户端
     int socked;
     // addr 内存区域
     struct sockaddr_un addr;
 
-    while(1){
+    while (1) {
         LOGE("客户端，父进程开始连接");
         socked = socket(AF_LOCAL, SOCK_STREAM, 0);
-        if(socked < 0){
+        if (socked < 0) {
             LOGE("连接失败");
             return;
         }
@@ -119,7 +119,7 @@ Java_com_bhesky_app_Watcher_connectMonitor(JNIEnv *env, jobject instance){
 
         strcpy(addr.sun_path, PATH);
 
-        if(connect(socked, (const sockaddr *) &addr, sizeof(sockaddr_un)) < 0){
+        if (connect(socked, (const sockaddr *) &addr, sizeof(sockaddr_un)) < 0) {
             LOGE("connect 连接失败");
             close(socked);
             sleep(2);
@@ -135,17 +135,17 @@ Java_com_bhesky_app_Watcher_connectMonitor(JNIEnv *env, jobject instance){
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_bhesky_app_Watcher_createWatcher(JNIEnv *env, jobject instance, jstring userId_){
+Java_com_bhesky_app_services_Watcher_createWatcher(JNIEnv *env, jobject instance, jstring userId_) {
     userId = env->GetStringUTFChars(userId_, 0);
 
     //开启双进程
     pid_t pid = fork();  //fork函数会有两个返回值  fork下面的代码会执行两次
-    if(pid < 0){
+    if (pid < 0) {
 
-    }else if(pid == 0){
+    } else if (pid == 0) {
         //该代码运行在子进程中  守护进程
         child_do_work();
-    }else if(pid > 0){
+    } else if (pid > 0) {
         //该代码运行在父进程中
     }
 

@@ -116,7 +116,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
         //			public void run()
         //			{
         //				Looper.prepare();
-        //				ToastUtil.getInstant().show(mContext, "很抱歉，程序出现异常，即将退出。");
+        //				ToastUtil.getInstance().show(mContext, "很抱歉，程序出现异常，即将退出。");
         //				Looper.loop();
         //			}
         //		}.start();
