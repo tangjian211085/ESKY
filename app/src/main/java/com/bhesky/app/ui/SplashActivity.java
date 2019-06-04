@@ -71,7 +71,7 @@ public class SplashActivity extends BaseActivity {
         AnimationSet as = new AnimationSet(true);
 
         AlphaAnimation aa = new AlphaAnimation(0.7f, 1.0f);
-        aa.setDuration(2500);
+        aa.setDuration(1500);
 
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) splashImage.getLayoutParams();
         int pivotY = (DensityUtil.getScreenHeight(this)

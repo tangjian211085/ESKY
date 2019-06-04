@@ -21,8 +21,10 @@ import java.io.FilenameFilter;
  * 似乎这样子可以一次性执行完成:  cmd /c D:\Develop\Android\AndroidSDK\build-tools\27.0.2\dx --dex --output
  */
 public class Main {
+    private static final String buildToolsPath = "D:\\Develop\\Android\\AndroidSDK\\build-tools\\27.0.2\\";
+
     public static void main(String[] args) throws Exception {
-//        exeFirstStep();
+        exeFirstStep();
         exeSecondStep();
         exeThirdStep();
 //        exeFourthStep();
@@ -43,7 +45,7 @@ public class Main {
         //cmd /c dx --dex --output D:\Develop\Android\Code\Personal_Code\LearningCode\ESKY\proxy_tool\temp\classes.dex D:\Develop\Android\Code\Personal_Code\LearningCode\ESKY\proxy_tool\temp\classes.jar
         StringBuilder stringBuilder = new StringBuilder();
         //windows上需要加上 cmd /c
-        stringBuilder.append("cmd /c dx --dex --output ").append(classesDex.getAbsolutePath()).append(" ").append(classesJar.getAbsolutePath());
+        stringBuilder.append("cmd /c ").append(buildToolsPath).append("dx --dex --output ").append(classesDex.getAbsolutePath()).append(" ").append(classesJar.getAbsolutePath());
         System.out.println("DMLog*******  " + stringBuilder.toString());
         Process process = Runtime.getRuntime().exec(stringBuilder.toString());
         process.waitFor();

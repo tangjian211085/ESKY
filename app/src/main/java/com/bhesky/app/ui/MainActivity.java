@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bhesky.app.R;
-import com.bhesky.app.services.LocalService;
 import com.bhesky.app.ui.test.SqliteActivity;
 import com.puhui.lib.base.BaseActivity;
 import com.puhui.lib.utils.AppManager;
@@ -30,7 +29,8 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        startService(new Intent(getApplicationContext(), LocalService.class));
+        //这里调用会影响启动页跳转到MainActivity的效果
+//        startService(new Intent(getApplicationContext(), LocalService.class));
 
     }
 
