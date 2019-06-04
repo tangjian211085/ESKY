@@ -22,7 +22,7 @@ public class ProxyApplication extends Application {
     //定义好解密后的文件存放路径
     private String app_name;
     private String app_version;
-    private boolean isUseEncrypt = false;
+    private boolean isUseEncrypt = true;
 
     /**
      * ActivityThread在创建Application之后调用的第一个方法，
@@ -77,12 +77,13 @@ public class ProxyApplication extends Application {
                         byte[] bytes = ReflectUtils.getBytes(file);
                         byte[] result = AESUtils.decrypt(bytes);
                         FileOutputStream fos = new FileOutputStream(file);
+//                        FileOutputStream fos = new FileOutputStream(new File(dexDir, name));  //????
                         fos.write(result);
                         fos.flush();
                         fos.close();
                         dexFiles.add(file);
 
-                        //保存文件到dexDir
+                        //保存文件到dexDir  使用了new FileOutputStream(new File(dexDir, name));的话，就应该不需要下面语句了
                         FileUtils.saveFile(dexDir, file);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -115,7 +116,7 @@ public class ProxyApplication extends Application {
             Object[] addElements = (Object[]) makeDexElements.invoke(pathList, dexFiles, versionDir, suppressedException);
             System.out.println("DMLog*******  makeDexElements has got");
 
-            //4、合并数组
+            //4、合并数组   问题：被加密的dexElement是否在dexElements数组中存在？？？
             Object[] newElements = (Object[]) Array.newInstance(dexElements.getClass().getComponentType(),
                     dexElements.length + addElements.length);
             System.arraycopy(dexElements, 0, newElements, 0, dexElements.length);
